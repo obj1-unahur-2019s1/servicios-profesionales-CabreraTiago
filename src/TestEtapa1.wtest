@@ -1,0 +1,52 @@
+import profesionales.*
+import Universidad.*
+import Empresa.*
+
+describe "Test de la Etapa 1" {
+
+	var sanMartin = new Universidad(provincia = "Buenos Aires", honorarios = 3500)
+	var rosario = new Universidad(provincia = "Santa Fé", honorarios = 2800)
+	var corrientes = new Universidad(provincia = "Corrientes", honorarios = 4200)
+	var unahur = new Universidad(provincia = "Buenos Aires", honorarios = 8800)
+	
+	var juana = new ProfesionalVinculado(universidad = rosario)
+	var melina = new ProfesionalAsociado(universidad = corrientes)
+	var rocio = new ProfesionalLibre(universidad = unahur, honorariosPorHora = 5000, provincias = #{ "Santa Fé", "Córdoba", "Buenos Aires" })
+	var luciana = new ProfesionalLibre(universidad = rosario, honorariosPorHora = 3200, provincias = #{ "Santa Fé", "Entre Ríos" })
+	
+	var empresa = new Empresa(honorariosReferencia = 3500)
+
+	fixture {
+		empresa.contratar(juana)
+		empresa.contratar(melina)
+		empresa.contratar(rocio)
+		empresa.contratar(luciana)
+	}
+
+	test "Estudiaron en" {
+		assert.equals(2, empresa.cuantosEstudiaronEn(rosario))
+		assert.equals(1, empresa.cuantosEstudiaronEn(unahur))
+		assert.equals(0, empresa.cuantosEstudiaronEn(sanMartin))
+	}
+	
+	test "Profesionales caros" {
+		assert.equals(#{ rocio }, empresa.profesionalCaros())
+	}
+	
+	test "Universidades formadoras" {
+		assert.equals(#{ rosario, corrientes, unahur }, empresa.universidadesFormadoras())
+	}
+	
+	test "Profesional más barato" {
+		assert.equals(juana, empresa.profesionalMasBarato())
+	}
+	
+	test "Gente acotada" {
+		assert.that(empresa.genteAcotada())
+		luciana.provincias().add("Corrientes")
+		luciana.provincias().add("Misiones")
+		assert.notThat(empresa.genteAcotada())
+	}
+
+}
+
