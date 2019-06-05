@@ -34,12 +34,8 @@ class ProfesionalVinculado inherits Profesional {
 
 class ProfesionalLibre inherits Profesional {
 
-	const property provincias = #{}
+	var property provinciasDondePuedeTrabajar
 	var property honorariosPorHora
-
-	override method provinciasDondePuedeTrabajar() {
-		return provincias
-	}
 
 }
 

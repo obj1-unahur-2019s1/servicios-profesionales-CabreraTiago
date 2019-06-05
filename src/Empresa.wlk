@@ -27,5 +27,9 @@ class Empresa {
 		return profesionales.all{ profesional => profesional.provinciasDondePuedeTrabajar().size() <= 3 }
 	}
 
+	method puedeSatisfacer(solicitante) {
+		return profesionales.any{ profesional => solicitante.puedeSerAtendido(profesional) }
+	}
+
 }
 

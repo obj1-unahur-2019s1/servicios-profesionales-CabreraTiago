@@ -1,6 +1,7 @@
 import profesionales.*
 import Universidad.*
 import Empresa.*
+import solicitantes.*
 
 describe "Test de la Etapa 1" {
 
@@ -8,13 +9,18 @@ describe "Test de la Etapa 1" {
 	var rosario = new Universidad(provincia = "Santa Fé", honorarios = 2800)
 	var corrientes = new Universidad(provincia = "Corrientes", honorarios = 4200)
 	var unahur = new Universidad(provincia = "Buenos Aires", honorarios = 8800)
+	var utn = new Universidad(provincia = "Córdoba", honorarios = 7000)
+	var uba = new Universidad(provincia = "Buenos Aires", honorarios = 8000)
 	
 	var juana = new ProfesionalVinculado(universidad = rosario)
 	var melina = new ProfesionalAsociado(universidad = corrientes)
-	var rocio = new ProfesionalLibre(universidad = unahur, honorariosPorHora = 5000, provincias = #{ "Santa Fé", "Córdoba", "Buenos Aires" })
-	var luciana = new ProfesionalLibre(universidad = rosario, honorariosPorHora = 3200, provincias = #{ "Santa Fé", "Entre Ríos" })
+	var rocio = new ProfesionalLibre(universidad = unahur, honorariosPorHora = 5000, provinciasDondePuedeTrabajar = #{ "Santa Fé", "Córdoba", "Buenos Aires" })
+	var luciana = new ProfesionalLibre(universidad = rosario, honorariosPorHora = 3200, provinciasDondePuedeTrabajar = #{ "Santa Fé", "Entre Ríos" })
 	
 	var empresa = new Empresa(honorariosReferencia = 3500)
+	
+	var pepe = new Persona(provincia = "Buenos Aires")
+	var institucion = new Institucion(listaUniversidades = #{ utn, uba })
 
 	fixture {
 		empresa.contratar(juana)
@@ -43,9 +49,14 @@ describe "Test de la Etapa 1" {
 	
 	test "Gente acotada" {
 		assert.that(empresa.genteAcotada())
-		luciana.provincias().add("Corrientes")
-		luciana.provincias().add("Misiones")
+		luciana.provinciasDondePuedeTrabajar().add("Corrientes")
+		luciana.provinciasDondePuedeTrabajar().add("Misiones")
 		assert.notThat(empresa.genteAcotada())
+	}
+	
+	test "Puede satisfacer" {
+		assert.that(empresa.puedeSatisfacer(pepe))
+		assert.notThat(empresa.puedeSatisfacer(institucion))
 	}
 
 }
